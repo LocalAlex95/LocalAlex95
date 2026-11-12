@@ -1,0 +1,54 @@
+name: Kartenapp iOS bauen
+
+on:
+  push:
+    paths:
+      - "kartenapp-ios/**"
+      - ".github/workflows/kartenapp-ios.yml"
+  pull_request:
+    paths:
+      - "kartenapp-ios/**"
+      - ".github/workflows/kartenapp-ios.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: kartenapp-ios
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Xcode-Projekt erzeugen
+        run: |
+          which xcodegen || brew install xcodegen
+          xcodegen generate
+
+      - name: Bauen und testen (Simulator)
+        run: |
+          set -o pipefail
+          xcodebuild -version
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          runtimes = json.load(sys.stdin)['devices']
+          phones = [d['udid'] for name in sorted(runtimes) if 'iOS' in name for d in runtimes[name] if d['name'].startswith('iPhone')]
+          print(phones[-1])")
+          echo "Simulator: $UDID"
+          xcodebuild test \
+            -project Kartenapp.xcodeproj \
+            -scheme Kartenapp \
+            -destination "id=$UDID" \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee build.log | grep -E "error|warning: unre|Test Case|Test Suite|\*\* TEST|BUILD" || true
+          grep -q "\*\* TEST SUCCEEDED \*\*" build.log
+
+      - name: Build-Log anhängen
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build-log
+          path: kartenapp-ios/build.log
