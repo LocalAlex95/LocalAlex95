@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meine Karten</string>
+
+    <string name="add_card">Karte hinzufügen</string>
+    <string name="edit_card">Karte bearbeiten</string>
+    <string name="empty_title">Noch keine Karten</string>
+    <string name="empty_text">Lege deine erste Mitglieds- oder Bonuskarte an, zum Beispiel per Barcode-Scan.</string>
+
+    <string name="back">Zurück</string>
+    <string name="save">Speichern</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="delete">Löschen</string>
+    <string name="cancel">Abbrechen</string>
+
+    <string name="field_name">Name (z. B. IKEA Family)</string>
+    <string name="field_number">Kartennummer / Code-Inhalt</string>
+    <string name="field_format">Barcode-Typ</string>
+    <string name="field_color">Farbe</string>
+    <string name="field_note">Notiz (optional)</string>
+
+    <string name="scan">Barcode scannen</string>
+    <string name="scan_prompt">Barcode oder QR-Code der Karte ins Bild halten</string>
+
+    <string name="error_name">Bitte einen Namen eingeben.</string>
+    <string name="error_number">Bitte eine Kartennummer eingeben oder scannen.</string>
+    <string name="error_format">Die Nummer passt nicht zum gewählten Barcode-Typ.</string>
+    <string name="barcode_error">Der Code kann mit diesem Barcode-Typ nicht dargestellt werden.</string>
+    <string name="barcode_description">Barcode der Karte</string>
+
+    <string name="delete_title">Karte löschen?</string>
+    <string name="delete_text">„%1$s“ wird dauerhaft entfernt.</string>
+</resources>
