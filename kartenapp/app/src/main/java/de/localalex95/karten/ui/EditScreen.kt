@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -48,6 +49,7 @@ import com.journeyapps.barcodescanner.ScanOptions
 import de.localalex95.karten.R
 import de.localalex95.karten.barcode.BarcodeEncoder
 import de.localalex95.karten.barcode.CardFormat
+import de.localalex95.karten.brand.Brands
 import de.localalex95.karten.data.Card
 import de.localalex95.karten.data.CardColors
 import java.util.UUID
@@ -118,17 +120,35 @@ fun EditScreen(
                 Text(stringResource(R.string.scan))
             }
 
-            OutlinedTextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text(stringResource(R.string.field_name)) },
-                singleLine = true,
-                isError = showErrors && !nameOk,
-                supportingText = if (showErrors && !nameOk) {
-                    { Text(stringResource(R.string.error_name)) }
-                } else null,
-                modifier = Modifier.fillMaxWidth(),
-            )
+            Column {
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text(stringResource(R.string.field_name)) },
+                    singleLine = true,
+                    isError = showErrors && !nameOk,
+                    supportingText = if (showErrors && !nameOk) {
+                        { Text(stringResource(R.string.error_name)) }
+                    } else null,
+                    // Logo erscheint, sobald der Name zu einem bekannten Anbieter passt
+                    trailingIcon = { BrandLogo(name, size = 32.dp) },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                val suggestions = Brands.suggest(name)
+                if (suggestions.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier.horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        for (brand in suggestions) {
+                            SuggestionChip(
+                                onClick = { name = brand.name },
+                                label = { Text(brand.name) },
+                            )
+                        }
+                    }
+                }
+            }
 
             OutlinedTextField(
                 value = number,

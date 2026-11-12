@@ -93,15 +93,18 @@ private fun CardTile(card: Card, onClick: () -> Unit) {
             .padding(12.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = card.name,
-            color = contentColorOn(background),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            BrandLogo(card.name, size = 40.dp, modifier = Modifier.padding(bottom = 8.dp))
+            Text(
+                text = card.name,
+                color = contentColorOn(background),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 

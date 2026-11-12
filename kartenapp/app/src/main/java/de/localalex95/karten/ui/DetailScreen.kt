@@ -105,6 +105,7 @@ fun DetailScreen(
                     .padding(horizontal = 16.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                BrandLogo(card.name, size = 56.dp, modifier = Modifier.padding(bottom = 16.dp))
                 BarcodeImage(card.number, card.format)
                 Spacer(Modifier.height(16.dp))
                 SelectionContainer {

@@ -2,10 +2,12 @@ package de.localalex95.karten
 
 import de.localalex95.karten.barcode.BarcodeEncoder
 import de.localalex95.karten.barcode.CardFormat
+import de.localalex95.karten.brand.Brands
 import de.localalex95.karten.data.Card
 import de.localalex95.karten.data.CardJson
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -58,5 +60,29 @@ class CardLogicTest {
         val qr = BarcodeEncoder.encode("Hallo äöü", CardFormat.QR_CODE, 400, 400)
         assertEquals(400, qr.width)
         assertEquals(400, qr.height)
+    }
+
+    @Test
+    fun brandIsRecognisedInCardName() {
+        assertEquals("ikea.com", Brands.match("IKEA Family")?.domain)
+        assertEquals("ikea.com", Brands.match("meine ikea-karte")?.domain)
+        assertEquals("hm.com", Brands.match("H&M Member")?.domain)
+        assertEquals("mueller.de", Brands.match("Müller")?.domain)
+        assertEquals("mediamarkt.de", Brands.match("Media Markt Club")?.domain)
+        assertEquals("dm.de", Brands.match("dm")?.domain)
+    }
+
+    @Test
+    fun brandOnlyMatchesWholeWords() {
+        assertNull(Brands.match("Admin-Ausweis")) // enthält "dm", aber nicht als Wort
+        assertNull(Brands.match("Fitnessstudio"))
+        assertNull(Brands.match(""))
+    }
+
+    @Test
+    fun suggestionsStartWithTypedText() {
+        assertEquals(listOf("IKEA Family"), Brands.suggest("ik").map { it.name })
+        assertTrue(Brands.suggest("i").isEmpty()) // erst ab zwei Zeichen
+        assertTrue(Brands.suggest("PAYBACK").isEmpty()) // schon vollständig getippt
     }
 }
